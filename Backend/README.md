@@ -17,7 +17,7 @@ The request body should be a JSON object with the following properties:
 - `email` (string, required): The user's email address. Must be a valid email format and at least 5 characters long.
 - `password` (string, required): The user's password. Must be at least 5 characters long.
 
-### Example Response
+### Example Request
 ```json
 {
   "fullName": {
@@ -136,3 +136,75 @@ The request body should be a JSON object with the following properties:
 ### Notes
 - The password is compared with the hashed password stored in the database.
 - A JWT token is generated and returned upon successful authentication.
+
+## `/users/profile/` Endpoint
+
+### Description
+
+Retrieve the profile of the authenticated user.
+
+### HTTP METHOD 
+
+`GET`
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Response Body**:
+  ```json
+  {
+    "_id": "user_id_here",
+    "fullName": {
+      "firstName": "John",
+      "lastName": "Doe"
+    },
+    "email": "john.doe@example.com"
+  }
+  ```
+
+#### Authentication Errors
+- **Status Code**: 401 Unauthorized
+- **Response Body**:
+  ```json
+  {
+    "message": "Authentication required"
+  }
+  ```
+
+### Notes
+- This endpoint requires a valid JWT token in the request headers.
+
+## `/users/logout/` Endpoint
+
+### Description
+
+Logout the authenticated user by invalidating the JWT token.
+
+### HTTP METHOD 
+
+`GET`
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Response Body**:
+  ```json
+  {
+    "message": "Logged out"
+  }
+  ```
+
+#### Authentication Errors
+- **Status Code**: 401 Unauthorized
+- **Response Body**:
+  ```json
+  {
+    "message": "Authentication required"
+  }
+  ```
+
+### Notes
+- This endpoint requires a valid JWT token in the request headers.
+- The JWT token is added to a blacklist to prevent further use.
