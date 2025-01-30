@@ -1,5 +1,5 @@
 # Backend API Documentation
-## `/user/register/` Endpoint
+## `/users/register/` Endpoint
 
 ### Description
 
@@ -66,3 +66,73 @@ The request body should be a JSON object with the following properties:
 ### Notes
 - The password is hashed before being stored in the database.
 - A JWT token is generated and returned upon successful registration.
+
+## `/users/login/` Endpoint
+
+### Description
+
+Authenticate a user and return a JWT token if the credentials are valid.
+
+### HTTP METHOD 
+
+`POST`
+
+### Request Body
+The request body should be a JSON object with the following properties:
+- `email` (string, required): The user's email address. Must be a valid email format.
+- `password` (string, required): The user's password. Must be at least 5 characters long.
+
+### Example Request
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "password123"
+}
+```
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Response Body**:
+  ```json
+  {
+    "token": "jwt_token_here",
+    "user": {
+      "_id": "user_id_here",
+      "fullName": {
+        "firstName": "John",
+        "lastName": "Doe"
+      },
+      "email": "john.doe@example.com"
+    }
+  }
+  ```
+
+#### Validation Errors
+- **Status Code**: 400 Bad Request
+- **Response Body**:
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "Error message here",
+        "param": "parameter_name",
+        "location": "body"
+      }
+    ]
+  }
+  ```
+
+#### Authentication Errors
+- **Status Code**: 401 Unauthorized
+- **Response Body**:
+  ```json
+  {
+    "message": "Invalid email or password"
+  }
+  ```
+
+### Notes
+- The password is compared with the hashed password stored in the database.
+- A JWT token is generated and returned upon successful authentication.
