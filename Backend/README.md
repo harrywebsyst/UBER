@@ -1,4 +1,5 @@
 # Backend API Documentation
+
 ## `/users/register/` Endpoint
 
 ### Description
@@ -293,3 +294,157 @@ The request body should be a JSON object with the following properties:
 ### Notes
 - The password is hashed before being stored in the database.
 - A JWT token is generated and returned upon successful registration.
+
+## `/captains/login/` Endpoint
+
+### Description
+
+Authenticate a captain and return a JWT token if the credentials are valid.
+
+### HTTP METHOD 
+
+`POST`
+
+### Request Body
+The request body should be a JSON object with the following properties:
+- `email` (string, required): The captain's email address. Must be a valid email format.
+- `password` (string, required): The captain's password. Must be at least 5 characters long.
+
+### Example Request
+```json
+{
+  "email": "jane.doe@example.com",
+  "password": "password123"
+}
+```
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Response Body**:
+  ```json
+  {
+    "token": "jwt_token_here",
+    "captain": {
+      "_id": "captain_id_here",
+      "fullName": {
+        "firstName": "Jane",
+        "lastName": "Doe"
+      },
+      "email": "jane.doe@example.com",
+      "vehicle": {
+        "color": "red",
+        "plate": "ABC123",
+        "capacity": 4,
+        "vehicleType": "car"
+      }
+    }
+  }
+  ```
+
+#### Validation Errors
+- **Status Code**: 400 Bad Request
+- **Response Body**:
+  ```json
+  {
+    "errors": [
+      {
+        "msg": "Error message here",
+        "param": "parameter_name",
+        "location": "body"
+      }
+    ]
+  }
+  ```
+
+#### Authentication Errors
+- **Status Code**: 401 Unauthorized
+- **Response Body**:
+  ```json
+  {
+    "message": "Invalid email or password"
+  }
+  ```
+
+### Notes
+- The password is compared with the hashed password stored in the database.
+- A JWT token is generated and returned upon successful authentication.
+
+## `/captains/profile/` Endpoint
+
+### Description
+
+Retrieve the profile of the authenticated captain.
+
+### HTTP METHOD 
+
+`GET`
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Response Body**:
+  ```json
+  {
+    "_id": "captain_id_here",
+    "fullName": {
+      "firstName": "Jane",
+      "lastName": "Doe"
+    },
+    "email": "jane.doe@example.com",
+    "vehicle": {
+      "color": "red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+  ```
+
+#### Authentication Errors
+- **Status Code**: 401 Unauthorized
+- **Response Body**:
+  ```json
+  {
+    "message": "Authentication required"
+  }
+  ```
+
+### Notes
+- This endpoint requires a valid JWT token in the request headers.
+
+## `/captains/logout/` Endpoint
+
+### Description
+
+Logout the authenticated captain by invalidating the JWT token.
+
+### HTTP METHOD 
+
+`GET`
+
+### Responses
+
+#### Success
+- **Status Code**: 200 OK
+- **Response Body**:
+  ```json
+  {
+    "message": "Logout success"
+  }
+  ```
+
+#### Authentication Errors
+- **Status Code**: 401 Unauthorized
+- **Response Body**:
+  ```json
+  {
+    "message": "Authentication required"
+  }
+  ```
+
+### Notes
+- This endpoint requires a valid JWT token in the request headers.
+- The JWT token is added to a blacklist to prevent further use.
